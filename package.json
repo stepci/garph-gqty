@@ -1,7 +1,7 @@
 {
   "name": "@garph/gqty",
   "version": "0.0.1",
-  "description": "",
+  "description": "tRPC-style client for Garph",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.json"
