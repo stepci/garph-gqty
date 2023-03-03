@@ -34,7 +34,7 @@ export function createGeneratedSchema (types: AnyType[]) {
   }
 
   for (const type of types) {
-    if (type.typeDef.type === "ObjectType") {
+    if (type.typeDef.type === "ObjectType" || type.typeDef.type === "InterfaceType" || type.typeDef.type === "Union") {
       if (type.typeDef.name === "Query" || type.typeDef.name === "Mutation" || type.typeDef.name === "Subscription") {
         type.typeDef.name = type.typeDef.name.toLowerCase()
       }
