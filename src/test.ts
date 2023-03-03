@@ -7,8 +7,7 @@ const queryType = g.type('Query', {
 
 type ClientTypes = InferClient<{ query: typeof queryType }>
 
-const { useQuery } = createClient<ClientTypes>(g, {
+const { useQuery } = createClient<ClientTypes>({
+  schema: g,
   url: 'http://localhost:4000/graphql'
 })
-
-useQuery()

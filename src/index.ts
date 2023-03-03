@@ -4,9 +4,17 @@ import { createReactClient, ReactClientDefaults } from '@gqty/react'
 import { createGeneratedSchema, createScalarsEnumsHash } from './utils'
 
 type ClientOptions = {
+  schema: GarphSchema
   url: string
   headers?: HeadersInit
   defaults?: ReactClientDefaults
+}
+
+// TODO
+type SchemaTypes = {
+  query: any
+  mutation?: any
+  subscription?: any
 }
 
 function createQueryFetcher (options: ClientOptions): QueryFetcher {
@@ -34,13 +42,7 @@ function createQueryFetcher (options: ClientOptions): QueryFetcher {
   }
 }
 
-type SchemaTypes = {
-  query: any
-  mutation?: any
-  subscription?: any
-}
-
-export function createClient <T extends SchemaTypes>(g: GarphSchema, options: ClientOptions) {
+export function createClient <T extends SchemaTypes>(options: ClientOptions) {
   const queryFetcher = createQueryFetcher(options)
 
   type Query = {
@@ -74,8 +76,8 @@ export function createClient <T extends SchemaTypes>(g: GarphSchema, options: Cl
     SchemaObjectTypesNames,
     SchemaObjectTypes
   >({
-    schema: createGeneratedSchema(g.types),
-    scalarsEnumsHash: createScalarsEnumsHash(g.types),
+    schema: createGeneratedSchema(options.schema.types),
+    scalarsEnumsHash: createScalarsEnumsHash(options.schema.types),
     queryFetcher
   })
 

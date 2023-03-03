@@ -1,10 +1,12 @@
 {
   "compilerOptions": {
+    "declaration": true,
     "outDir": "dist",
     "target": "ESnext",
-    "moduleResolution": "nodenext",
+    "moduleResolution": "node",
+    "module": "ESNext",
     "lib": ["DOM", "ESNext"],
     "resolveJsonModule": true
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts"],
 }
