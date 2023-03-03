@@ -1,6 +1,6 @@
 # @garph/gqty
 
-tRPC-style client for Garph, based on [GQty](https://github.com/gqty-dev/gqty)
+tRPC-style client for [Garph](https://github.com/stepci/garph), based on [GQty](https://github.com/gqty-dev/gqty)
 
 ```
 npm i @garph/gqty
