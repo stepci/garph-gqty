@@ -1,5 +1,5 @@
-import { g, InferClient } from 'garph'
-import { createClient } from './index'
+import { g } from 'garph'
+import { createClient, InferClient } from './index'
 
 const queryType = g.type('Query', {
   test: g.string()

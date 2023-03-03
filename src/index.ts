@@ -1,7 +1,9 @@
-import { GarphSchema } from 'garph'
+import { GarphSchema, InferClient } from 'garph'
 import { createClient as createGQtyClient, QueryFetcher } from 'gqty'
 import { createReactClient, ReactClientDefaults } from '@gqty/react'
 import { createGeneratedSchema, createScalarsEnumsHash } from './utils'
+
+export { InferClient }
 
 type ClientOptions = {
   schema: GarphSchema

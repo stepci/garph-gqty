@@ -9,8 +9,8 @@ npm i @garph/gqty
 Example:
 
 ```ts
-import { g, InferClient } from 'garph'
-import { createClient } from '@garph/gqty'
+import { g } from 'garph'
+import { InferClient, createClient } from '@garph/gqty'
 
 export const queryType = g.type('Query', {
   greet: g.string()
