@@ -3,8 +3,6 @@ import { createClient as createGQtyClient, QueryFetcher } from 'gqty'
 import { createReactClient, ReactClientDefaults } from '@gqty/react'
 import { createGeneratedSchema, createScalarsEnumsHash } from './utils'
 
-export { InferClient }
-
 type ClientOptions = {
   schema: GarphSchema
   url: string
@@ -83,11 +81,15 @@ export function createClient <T extends SchemaTypes>(options: ClientOptions) {
     queryFetcher
   })
 
-  return createReactClient<GeneratedSchema>(client, {
+  const reactClient = createReactClient<GeneratedSchema>(client, {
     defaults: {
       suspense: true,
       staleWhileRevalidate: false,
       ...options.defaults
     }
   })
+
+  return { ...client, ...reactClient }
 }
+
+export { InferClient }
