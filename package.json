@@ -18,7 +18,7 @@
   "homepage": "https://github.com/stepci/garph-gqty#readme",
   "dependencies": {
     "@gqty/react": "^2.1.2-alpha-db574a66.0",
-    "garph": "^0.2.8",
+    "garph": "^0.3.3",
     "gqty": "^2.3.1-alpha-db574a66.0",
     "typescript": "^4.9.5"
   },
