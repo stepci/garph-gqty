@@ -1,5 +1,5 @@
 import { AnyType } from 'garph'
-import { getFieldType } from 'garph/dist/converter'
+import { getFieldType } from 'garph/dist/schema'
 import { Schema, ScalarsEnumsHash } from 'gqty'
 
 export function createScalarsEnumsHash (types: AnyType[]) {
