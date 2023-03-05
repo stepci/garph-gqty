@@ -1,10 +1,11 @@
 {
   "name": "@garph/gqty",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "description": "tRPC-style client for Garph",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc -p tsconfig.json",
+    "test": "ts-node-esm ./src/test.ts"
   },
   "repository": {
     "type": "git",
@@ -18,11 +19,12 @@
   "homepage": "https://github.com/stepci/garph-gqty#readme",
   "dependencies": {
     "@gqty/react": "^2.1.2-alpha-db574a66.0",
-    "garph": "^0.3.4",
+    "garph": "^0.3.6",
     "gqty": "^2.3.1-alpha-db574a66.0",
     "typescript": "^4.9.5"
   },
   "devDependencies": {
-    "@types/node": "^18.14.5"
+    "@types/node": "^18.14.5",
+    "ts-node": "^10.9.1"
   }
 }

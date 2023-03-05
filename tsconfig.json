@@ -4,7 +4,7 @@
     "outDir": "dist",
     "target": "ESnext",
     "moduleResolution": "node",
-    "module": "ESNext",
+    "module": "NodeNext",
     "lib": ["DOM", "ESNext"],
     "resolveJsonModule": true
   },

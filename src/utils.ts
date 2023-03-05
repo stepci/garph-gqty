@@ -1,6 +1,7 @@
 import { AnyType } from 'garph'
 import { getFieldType } from 'garph/dist/schema'
 import { Schema, ScalarsEnumsHash } from 'gqty'
+import { SchemaUnionsKey } from 'gqty'
 
 export function createScalarsEnumsHash (types: AnyType[]) {
   const scalarsEnumsHash: ScalarsEnumsHash = {
@@ -30,7 +31,8 @@ export function createGeneratedSchema (types: AnyType[]) {
     },
     subscription: {
       __typename: { __type: "String!" }
-    }
+    },
+    [SchemaUnionsKey]: {}
   }
 
   for (const type of types) {
@@ -43,21 +45,30 @@ export function createGeneratedSchema (types: AnyType[]) {
         __typename: { __type: "String!" }
       }
 
-      Object.entries(type.typeDef.shape).forEach(([key, value]: [string, any]) => {
-        const args: Record<string, any> = {}
-
-        generatedSchema[type.typeDef.name as string][key] = {
-          __type: getFieldType(value, { defaultNullability: false }),
+      if (type.typeDef.type === "Union") {
+        generatedSchema[type.typeDef.name as string] = {
+          __typename: { __type: "String!" },
+          $on: { __type: `$${type.typeDef.name}!` }
         }
 
-        if (value.typeDef.args) {
-          Object.entries(value.typeDef.args).forEach(([key, value]: [string, any]) => {
-            args[key] = getFieldType(value, { defaultNullability: false })
-          })
+        generatedSchema[SchemaUnionsKey][type.typeDef.name] = Object.values(type.typeDef.shape).map((value: any) => value.typeDef.name)
+      } else {
+        Object.entries(type.typeDef.shape).forEach(([key, value]: [string, any]) => {
+          const args: Record<string, any> = {}
 
-          generatedSchema[type.typeDef.name as string][key]['__args'] = args
-        }
-      })
+          generatedSchema[type.typeDef.name as string][key] = {
+            __type: getFieldType(value, { defaultNullability: false }),
+          }
+
+          if (value.typeDef.args) {
+            Object.entries(value.typeDef.args).forEach(([key, value]: [string, any]) => {
+              args[key] = getFieldType(value, { defaultNullability: false })
+            })
+
+            generatedSchema[type.typeDef.name as string][key]['__args'] = args
+          }
+        })
+      }
     }
   }
 
