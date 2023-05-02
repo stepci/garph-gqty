@@ -12,7 +12,7 @@ const y = g.type('Y', {
 const union = g.unionType('Union', { x, y })
 
 const queryType = g.type('Query', {
-  test: g.ref<typeof union>('Union')
+  test: g.ref(() => y)
 })
 
 type ClientTypes = InferClient<{ query: typeof queryType }>

@@ -1,5 +1,7 @@
 import { GarphSchema } from 'garph'
-import { createClient as createGQtyClient, QueryFetcher } from 'gqty'
+import { createClient as createGQtyClient, Cache, CacheOptions } from 'gqty'
+import { createClient as createSubscriptionsClient } from 'graphql-sse'
+import type { QueryFetcher } from 'gqty'
 import { createReactClient, ReactClientDefaults } from '@gqty/react'
 import { createGeneratedSchema, createScalarsEnumsHash } from './utils'
 import { InferClient } from 'garph/dist/client'
@@ -9,6 +11,7 @@ type ClientOptions = {
   url: string
   headers?: HeadersInit
   defaults?: ReactClientDefaults
+  cacheOptions?: CacheOptions
 }
 
 // TODO
@@ -20,22 +23,22 @@ type SchemaTypes = {
 
 function createQueryFetcher (options: ClientOptions): QueryFetcher {
   return async function (
-    query,
-    variables,
+    { query, variables, operationName },
     fetchOptions
   ) {
     const response = await fetch(options.url, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...options.headers
       },
       body: JSON.stringify({
         query,
-        variables
+        variables,
+        operationName,
       }),
-      mode: 'cors',
-      ...fetchOptions
+      mode: "cors",
+      ...fetchOptions,
     })
 
     const json = await response.json()
@@ -43,28 +46,12 @@ function createQueryFetcher (options: ClientOptions): QueryFetcher {
   }
 }
 
-export function createClient <T extends SchemaTypes>(options: ClientOptions) {
+export function createClient<T extends SchemaTypes>(options: ClientOptions) {
   const queryFetcher = createQueryFetcher(options)
 
-  type Query = {
-    __typename?: "Query"
-  } & T['query']
-
-  type Mutation = {
-    __typename?: "Mutation"
-  } & T['mutation']
-
-  type Subscription = {
-    __typename?: "Subscription"
-  } & T['subscription']
-
-  type SchemaObjectTypes = {
-    Mutation: Mutation
-    Query: Query
-    Subscription: Subscription
-  }
-
-  type SchemaObjectTypesNames = "Mutation" | "Query" | "Subscription"
+  type Query = T['query']
+  type Mutation = T['mutation']
+  type Subscription = T['subscription']
 
   type GeneratedSchema = {
     query: Query
@@ -72,19 +59,40 @@ export function createClient <T extends SchemaTypes>(options: ClientOptions) {
     subscription: Subscription
   }
 
-  const client = createGQtyClient<
-    GeneratedSchema,
-    SchemaObjectTypesNames,
-    SchemaObjectTypes
-  >({
+  const cache = new Cache(
+    undefined,
+    /**
+     * Default cache options immediate expiry with a 5 minutes window of
+     * stale-while-revalidate.
+     */
+    {
+      maxAge: 0,
+      staleWhileRevalidate: 5 * 60 * 1000,
+      normalization: true,
+      ...options.cacheOptions
+    }
+  )
+
+  const subscriptionsClient =
+    typeof window !== "undefined"
+      ? createSubscriptionsClient({
+          url: options.url,
+        })
+      : undefined
+
+  const client = createGQtyClient<GeneratedSchema>({
     schema: createGeneratedSchema(options.schema.types),
-    scalarsEnumsHash: createScalarsEnumsHash(options.schema.types),
-    queryFetcher
+    scalars: createScalarsEnumsHash(options.schema.types),
+    cache,
+    fetchOptions: {
+      fetcher: queryFetcher,
+      subscriber: subscriptionsClient
+    },
   })
 
   const reactClient = createReactClient<GeneratedSchema>(client, {
     defaults: {
-      suspense: true,
+      suspense: false,
       staleWhileRevalidate: false,
       ...options.defaults
     }
