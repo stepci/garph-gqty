@@ -9,6 +9,7 @@ import { InferClient } from 'garph/dist/client'
 type ClientOptions = {
   schema: GarphSchema
   url: string
+  subscriptionsUrl?: string
   headers?: HeadersInit
   defaults?: ReactClientDefaults
   cacheOptions?: CacheOptions
@@ -76,7 +77,7 @@ export function createClient<T extends SchemaTypes>(options: ClientOptions) {
   const subscriptionsClient =
     typeof window !== "undefined"
       ? createSubscriptionsClient({
-          url: options.url,
+          url: options.subscriptionsUrl || options.url + '/stream',
         })
       : undefined
 
