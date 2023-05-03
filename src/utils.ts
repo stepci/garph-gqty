@@ -51,11 +51,14 @@ export function createGeneratedSchema(schema: GraphQLSchema) {
 
       Object.values((type as GraphQLObjectType).getFields()).forEach((field) => {
         generatedSchema[type.name][field.name] = {
-          __type: field.type.toString(),
-          __args: field.args.length > 0 ? field.args.reduce((acc, arg) => {
-            acc[arg.name] = arg.type.toString()
-            return acc
-          }, {} as Record<string, string>) : undefined
+          __type: field.type.toString()
+        }
+
+        if (field.args.length > 0) {
+          generatedSchema[type.name][field.name].__args = {}
+          field.args.forEach((arg) => {
+            generatedSchema[type.name][field.name].__args[arg.name] = arg.type.toString()
+          })
         }
       })
     }

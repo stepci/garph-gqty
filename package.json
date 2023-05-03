@@ -1,11 +1,11 @@
 {
   "name": "@garph/gqty",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "tRPC-style client for Garph",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "ts-node-esm ./src/test.ts"
+    "test": "ts-node-esm ./test/test.ts"
   },
   "repository": {
     "type": "git",
