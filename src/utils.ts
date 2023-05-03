@@ -52,10 +52,10 @@ export function createGeneratedSchema(schema: GraphQLSchema) {
       Object.values((type as GraphQLObjectType).getFields()).forEach((field) => {
         generatedSchema[type.name][field.name] = {
           __type: field.type.toString(),
-          __args: field.args.reduce((acc, arg) => {
+          __args: field.args.length > 0 ? field.args.reduce((acc, arg) => {
             acc[arg.name] = arg.type.toString()
             return acc
-          }, {} as Record<string, string>)
+          }, {} as Record<string, string>) : undefined
         }
       })
     }
