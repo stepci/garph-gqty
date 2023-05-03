@@ -1,0 +1,27 @@
+type Query {
+  union: Union!
+}
+
+scalar S
+
+"""
+The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
+"""
+scalar String
+
+enum D {
+  a
+  b
+  c
+}
+
+union Union = X | Y
+
+type X {
+  a(bcd: String!): D!
+  b: S!
+}
+
+type Y {
+  b: String!
+}

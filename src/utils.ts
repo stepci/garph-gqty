@@ -1,27 +1,24 @@
-import { AnyType } from 'garph'
-import { getFieldType } from 'garph/dist/schema'
 import { Schema, ScalarsEnumsHash } from 'gqty'
 import { SchemaUnionsKey } from 'gqty'
+import { GraphQLSchema, GraphQLNamedType, isScalarType, isEnumType, isUnionType, GraphQLObjectType, isObjectType } from 'graphql'
 
-export function createScalarsEnumsHash (types: AnyType[]) {
-  const scalarsEnumsHash: ScalarsEnumsHash = {
-    Int: true,
-    Float: true,
-    String: true,
-    Boolean: true,
-    ID: true
-  }
+function filteredTypes (types: readonly GraphQLNamedType[], exclude: string[] = []) {
+  return types.filter((type) => !type.name.startsWith('__'))
+}
 
-  for (const type of types) {
-    if (type.typeDef.type === "Scalar" || type.typeDef.type === "Enum") {
-      scalarsEnumsHash[type.typeDef.name as string] = true
+export function createScalarsEnumsHash (schema: GraphQLSchema) {
+  const scalarsEnumsHash: ScalarsEnumsHash = {}
+
+  filteredTypes(schema.toConfig().types).forEach((type) => {
+    if (isScalarType(type) || isEnumType(type)) {
+      scalarsEnumsHash[type.name] = true
     }
-  }
+  })
 
   return scalarsEnumsHash
 }
 
-export function createGeneratedSchema (types: AnyType[]) {
+export function createGeneratedSchema(schema: GraphQLSchema) {
   const generatedSchema: Schema = {
     query: {
       __typename: { __type: "String!" }
@@ -35,42 +32,34 @@ export function createGeneratedSchema (types: AnyType[]) {
     [SchemaUnionsKey]: {}
   }
 
-  for (const type of types) {
-    if (type.typeDef.type === "ObjectType" || type.typeDef.type === "InterfaceType" || type.typeDef.type === "Union") {
-      if (type.typeDef.name === "Query" || type.typeDef.name === "Mutation" || type.typeDef.name === "Subscription") {
-        type.typeDef.name = type.typeDef.name.toLowerCase()
+  filteredTypes(schema.toConfig().types).forEach((type) => {
+    if (type.name === "Query" || type.name === "Mutation" || type.name === "Subscription") {
+      type.name = type.name.toLowerCase()
+    }
+
+    if (isUnionType(type)) {
+      generatedSchema[type.name as string] = {
+        __typename: { __type: "String!" },
+        $on: { __type: `$${type.name}!` }
       }
 
-      generatedSchema[type.typeDef.name as string] = {
+      generatedSchema[SchemaUnionsKey][type.name] = type.getTypes().map((value) => value.name)
+    } else if (isObjectType(type)) {
+      generatedSchema[type.name] = {
         __typename: { __type: "String!" }
       }
 
-      if (type.typeDef.type === "Union") {
-        generatedSchema[type.typeDef.name as string] = {
-          __typename: { __type: "String!" },
-          $on: { __type: `$${type.typeDef.name}!` }
+      Object.values((type as GraphQLObjectType).getFields()).forEach((field) => {
+        generatedSchema[type.name][field.name] = {
+          __type: field.type.toString(),
+          __args: field.args.reduce((acc, arg) => {
+            acc[arg.name] = arg.type.toString()
+            return acc
+          }, {} as Record<string, string>)
         }
-
-        generatedSchema[SchemaUnionsKey][type.typeDef.name] = Object.values(type.typeDef.shape).map((value: any) => value.typeDef.name)
-      } else {
-        Object.entries(type.typeDef.shape).forEach(([key, value]: [string, any]) => {
-          const args: Record<string, any> = {}
-
-          generatedSchema[type.typeDef.name as string][key] = {
-            __type: getFieldType(value, { defaultNullability: false }),
-          }
-
-          if (value.typeDef.args) {
-            Object.entries(value.typeDef.args).forEach(([key, value]: [string, any]) => {
-              args[key] = getFieldType(value, { defaultNullability: false })
-            })
-
-            generatedSchema[type.typeDef.name as string][key]['__args'] = args
-          }
-        })
-      }
+      })
     }
-  }
+  })
 
   return generatedSchema
 }
