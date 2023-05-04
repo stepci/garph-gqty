@@ -9,7 +9,7 @@ npm i @garph/gqty
 Example:
 
 ```ts
-import { g } from 'garph'
+import { g, buildSchema } from 'garph'
 import { InferClient, createClient } from '@garph/gqty'
 
 export const queryType = g.type('Query', {
@@ -21,9 +21,10 @@ export const queryType = g.type('Query', {
 })
 
 type ClientTypes = InferClient<{ query: typeof queryType }>
+const schema = buildSchema({ g })
 
 export const { useQuery } = createClient<ClientTypes>({
-  schema: g,
+  schema,
   url: 'http://localhost:4000/graphql'
 })
 ```
