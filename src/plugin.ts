@@ -7,6 +7,12 @@ import { createGeneratedSchema, createScalarsEnumsHash } from './utils'
 export function GarphGQtyPlugin(_, { clientConfig }) {
   return {
     visitor: {
+      ExportNamedDeclaration(path, state) {
+        if (state.file.opts.filename !== resolve(clientConfig)) return
+        if (path.node.specifiers.find(s => s.exported.name === 'compiledSchema')) {
+          path.node.specifiers = []
+        }
+      },
       CallExpression(path, state) {
         if (state.file.opts.filename !== resolve(clientConfig)) return
         if (path.node.callee.name !== 'createClient') return

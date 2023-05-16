@@ -1,6 +1,6 @@
 {
   "name": "@garph/gqty",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "description": "tRPC-style client for Garph",
   "main": "dist/index.js",
   "scripts": {
