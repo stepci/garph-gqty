@@ -1,6 +1,6 @@
 {
   "name": "@garph/gqty",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "tRPC-style client for Garph",
   "main": "dist/index.js",
   "scripts": {
@@ -28,8 +28,11 @@
     "ws": "^8.13.0"
   },
   "devDependencies": {
+    "@babel/types": "^7.21.5",
     "@types/node": "^18.14.5",
+    "babel-literal-to-ast": "^2.1.0",
     "garph": "^0.4.7",
+    "ts-import": "^4.0.0-beta.10",
     "ts-node": "^10.9.1",
     "type-fest": "^3.9.0"
   }
