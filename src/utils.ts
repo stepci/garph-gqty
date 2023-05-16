@@ -1,6 +1,15 @@
 import { Schema, ScalarsEnumsHash } from 'gqty'
 import { SchemaUnionsKey } from 'gqty'
-import type { GraphQLSchema, GraphQLNamedType, GraphQLObjectType, GraphQLUnionType } from 'graphql'
+import {
+  GraphQLSchema,
+  GraphQLNamedType,
+  GraphQLObjectType,
+  GraphQLUnionType,
+  isScalarType,
+  isEnumType,
+  isUnionType,
+  isObjectType
+} from 'graphql'
 
 function filteredTypes (types: readonly GraphQLNamedType[]) {
   return types.filter((type) => !type.name.startsWith('__'))
@@ -8,7 +17,6 @@ function filteredTypes (types: readonly GraphQLNamedType[]) {
 
 export function createScalarsEnumsHash (schema: GraphQLSchema) {
   const scalarsEnumsHash: ScalarsEnumsHash = {}
-  const { isScalarType, isEnumType } = require('graphql')
 
   filteredTypes(schema.toConfig().types).forEach((type) => {
     if (isScalarType(type) || isEnumType(type)) {
@@ -32,8 +40,6 @@ export function createGeneratedSchema(schema: GraphQLSchema) {
     },
     [SchemaUnionsKey]: {}
   }
-
-  const { isUnionType, isObjectType } = require('graphql')
 
   filteredTypes(schema.toConfig().types).forEach((type) => {
     if (type.name === "Query" || type.name === "Mutation" || type.name === "Subscription") {

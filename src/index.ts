@@ -1,15 +1,12 @@
-import type { GraphQLSchema } from 'graphql'
 import { createClient as createGQtyClient, Cache, CacheOptions } from 'gqty'
 import { createClient as createSubscriptionsClient } from 'graphql-sse'
 import type { QueryFetcher, ScalarsEnumsHash, Schema } from 'gqty'
 import { createReactClient, ReactClientDefaults } from '@gqty/react'
-import { createGeneratedSchema, createScalarsEnumsHash } from './utils'
 import type { InferClient } from 'garph/dist/client'
 
 type ClientOptions = {
-  generatedSchema?: Schema
-  scalarsEnumsHash?: ScalarsEnumsHash
-  schema: GraphQLSchema
+  generatedSchema: Schema
+  scalarsEnumsHash: ScalarsEnumsHash
   url: string
   subscriptionsUrl?: string
   headers?: HeadersInit
@@ -84,8 +81,8 @@ export function createClient<T extends SchemaTypes>(options: ClientOptions) {
       : undefined
 
   const client = createGQtyClient<GeneratedSchema>({
-    scalars: options.scalarsEnumsHash || createScalarsEnumsHash(options.schema),
-    schema: options.generatedSchema || createGeneratedSchema(options.schema),
+    scalars: options.scalarsEnumsHash,
+    schema: options.generatedSchema,
     cache,
     fetchOptions: {
       fetcher: queryFetcher,
