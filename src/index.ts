@@ -8,7 +8,7 @@ import type { InferClient } from 'garph/dist/client'
 
 type ClientOptions = {
   generatedSchema?: Schema
-  scalarEnumsHash?: ScalarsEnumsHash
+  scalarsEnumsHash?: ScalarsEnumsHash
   schema: GraphQLSchema
   url: string
   subscriptionsUrl?: string
@@ -84,7 +84,7 @@ export function createClient<T extends SchemaTypes>(options: ClientOptions) {
       : undefined
 
   const client = createGQtyClient<GeneratedSchema>({
-    scalars: options.scalarEnumsHash || createScalarsEnumsHash(options.schema),
+    scalars: options.scalarsEnumsHash || createScalarsEnumsHash(options.schema),
     schema: options.generatedSchema || createGeneratedSchema(options.schema),
     cache,
     fetchOptions: {
