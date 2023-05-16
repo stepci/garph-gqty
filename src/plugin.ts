@@ -19,8 +19,7 @@ export function GarphGQtyPlugin(_, { clientConfig }) {
         const generatedSchema = createGeneratedSchema(schema)
         const scalarsEnumsHash = createScalarsEnumsHash(schema)
 
-        const deleteIndex = path.node.arguments[0].properties.findIndex(p => p.key.name === 'schema')
-        path.node.arguments[0].properties[deleteIndex] = undefined
+        path.node.arguments[0].properties = path.node.arguments[0].properties.filter(p => p.key.name !== 'schema')
         path.node.arguments[0].properties.push(
           t.objectProperty(t.identifier('generatedSchema'), serialize(generatedSchema))
         )
