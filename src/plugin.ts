@@ -1,4 +1,4 @@
-import TSimport from 'ts-import'
+import * as TSimport from 'ts-import'
 import { resolve } from 'path'
 import t from '@babel/types'
 import serialize from 'babel-literal-to-ast'
