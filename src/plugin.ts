@@ -1,6 +1,6 @@
 import * as TSimport from 'ts-import'
 import { resolve } from 'path'
-import t from '@babel/types'
+import * as t from '@babel/types'
 import serialize from 'babel-literal-to-ast'
 import { createGeneratedSchema, createScalarsEnumsHash } from './utils'
 
@@ -11,7 +11,9 @@ export function GarphGQtyPlugin(_, { clientConfig }) {
         if (state.file.opts.filename !== resolve(clientConfig)) return
         if (path.node.callee.name !== 'createClient') return
 
-        const module = TSimport.loadSync(state.file.opts.filename)
+        const module = TSimport.loadSync(state.file.opts.filename, {
+          mode: TSimport.LoadMode.Compile
+        })
 
         const schema = module.compiledSchema
         const generatedSchema = createGeneratedSchema(schema)
