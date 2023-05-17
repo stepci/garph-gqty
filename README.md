@@ -60,4 +60,14 @@ export default function Example() {
 
 In production, you might want to use the babel plugin in order to replace the runtime dependencies (such as `generatedSchema`, `scalarsEnumsHash`) in your client config with statically-generated artifacts.
 
+```json
+{
+  "plugins": [["@garph/gqty/dist/plugin", {
+    "clientConfig": "./utils/client.ts"
+  }]]
+}
+```
+
+Where `clientConfig` is the path to the file where you call `createClient`
+
 *Special thanks to Vicary of GQty project for early feedback and helping to make `@garph/gqty` possible*
