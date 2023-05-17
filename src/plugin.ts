@@ -3,7 +3,7 @@ import { resolve } from 'path'
 import serialize from 'babel-literal-to-ast'
 import { createGeneratedSchema, createScalarsEnumsHash } from './utils'
 
-export function GarphGQtyPlugin(_, { clientConfig }) {
+export default function GarphGQtyPlugin(_, { clientConfig }) {
   return {
     visitor: {
       ExportNamedDeclaration(path, state) {
