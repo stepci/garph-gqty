@@ -15,7 +15,7 @@ function filteredTypes (types: readonly GraphQLNamedType[]) {
   return types.filter((type) => !type.name.startsWith('__'))
 }
 
-export function createScalarsEnumsHash (schema: GraphQLSchema) {
+export function createScalarsEnumsHash(schema: GraphQLSchema) {
   const scalarsEnumsHash: ScalarsEnumsHash = {}
 
   filteredTypes(schema.toConfig().types).forEach((type) => {

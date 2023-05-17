@@ -8,9 +8,10 @@ npm i @garph/gqty
 
 Example:
 
+**schema.ts**
+
 ```ts
 import { g, buildSchema } from 'garph'
-import { InferClient, createClient } from '@garph/gqty'
 
 export const queryType = g.type('Query', {
   greet: g.string()
@@ -20,16 +21,31 @@ export const queryType = g.type('Query', {
     .description('Greets a person')
 })
 
-type ClientTypes = InferClient<{ query: typeof queryType }>
 const schema = buildSchema({ g })
+```
 
-export const { useQuery } = createClient<ClientTypes>({
-  schema,
+**client.ts**
+
+```ts
+import { InferClient, createClient } from '@garph/gqty'
+import { createScalarsEnumsHash, createGeneratedSchema } from '@garph/gqty/dist/utils'
+import { schema, queryType } from './schema'
+
+type ClientTypes = InferClient<{ query: typeof queryType }>
+
+export const { useQuery, ... } = createClient<ClientTypes>({
+  generatedSchema: createGeneratedSchema(schema),
+  scalarsEnumsHash: createScalarsEnumsHash(schema),
   url: 'http://localhost:4000/graphql'
 })
+
+// Needed for the babel plugin
+export { schema as compiledSchema }
 ```
 
 Using the client (React):
+
+**query.tsx**
 
 ```tsx
 import { useQuery } from './client'
@@ -40,7 +56,8 @@ export default function Example() {
 }
 ```
 
-### Acknowledgements
+## Using the Babel plugin (alpha)
 
-- tRPC for inspiration
-- Vicary of GQty project for early feedback and helping to make `@garph/gqty` possible
+In production, you might want to use the babel plugin in order to replace the runtime dependencies (such as `generatedSchema`, `scalarsEnumsHash`) in your client config with statically-generated artifacts.
+
+*Special thanks to Vicary of GQty project for early feedback and helping to make `@garph/gqty` possible*
