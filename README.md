@@ -79,7 +79,7 @@ export const { useSubscription, ... } = createClient<ClientTypes>({
 
 ## Using the Babel plugin (alpha)
 
-In production, you might want to use the babel plugin in order to replace the runtime dependencies (such as `generatedSchema`, `scalarsEnumsHash`) in your client config with statically-generated artifacts.
+In production, you might want to use the babel plugin in order to replace the runtime dependencies (such as `generatedSchema`, `scalarsEnumsHash`) in your client config with statically-generated artefacts.
 
 **.babelrc**
 
