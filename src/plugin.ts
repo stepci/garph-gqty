@@ -1,4 +1,4 @@
-import { importTSmodule } from '@mishushakov/ts-load'
+import { importTSmoduleSync } from '@mishushakov/ts-load'
 import { resolve } from 'path'
 import serialize from 'babel-literal-to-ast'
 import { createGeneratedSchema, createScalarsEnumsHash } from './utils'
@@ -12,11 +12,11 @@ export default function GarphGQtyPlugin(_, { clientConfig }) {
           path.node.specifiers = []
         }
       },
-      async CallExpression(path, state) {
+      CallExpression(path, state) {
         if (state.file.opts.filename !== resolve(clientConfig)) return
         if (path.node.callee.name !== 'createClient') return
 
-        const module = await importTSmodule(state.file.opts.filename)
+        const module = importTSmoduleSync(state.file.opts.filename)
         const schema = module.compiledSchema
         const generatedSchema = createGeneratedSchema(schema)
         const scalarsEnumsHash = createScalarsEnumsHash(schema)
