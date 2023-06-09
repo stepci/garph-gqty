@@ -1,6 +1,6 @@
 {
   "name": "@garph/gqty",
-  "version": "0.4.3",
+  "version": "0.4.5",
   "description": "tRPC-style client for Garph",
   "main": "dist/index.js",
   "scripts": {
@@ -18,10 +18,10 @@
   },
   "homepage": "https://github.com/stepci/garph-gqty#readme",
   "dependencies": {
-    "@gqty/react": "^3.0.0-alpha-4ad34526.0",
+    "@gqty/react": "3.0.0-alpha-4a2eebdf.0",
     "@mishushakov/ts-load": "^1.0.1",
     "babel-literal-to-ast": "^2.1.0",
-    "gqty": "^3.0.0-alpha-4ad34526.0",
+    "gqty": "^3.0.0-alpha-4a2eebdf.0",
     "graphql": "^16.6.0"
   },
   "devDependencies": {
