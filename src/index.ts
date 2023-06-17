@@ -19,6 +19,7 @@ type ClientOptions = {
   headers?: HeadersInit
   defaults?: ReactClientDefaults
   cacheOptions?: CacheOptions
+  fetch?: typeof globalThis.fetch
 }
 
 // TODO
@@ -33,6 +34,7 @@ function createQueryFetcher (options: ClientOptions): QueryFetcher {
     { query, variables, operationName },
     fetchOptions
   ) {
+    const fetch = options.fetch ?? globalThis.fetch
     const response = await fetch(options.url, {
       method: "POST",
       headers: {
